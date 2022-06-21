@@ -18,7 +18,10 @@
             "tsConfig": "apps/docys/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": ["apps/docys/src/favicon.ico", "apps/docys/src/assets"],
-            "styles": ["apps/docys/src/styles.scss"],
+            "styles": [
+              "apps/docys/src/styles.scss",
+              "node_modules/bulma/css/bulma.min.css"
+            ],
             "scripts": []
           },
           "configurations": {
