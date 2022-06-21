@@ -3,11 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
-import { RoutingModule } from './routing.module';
+import { Route, RouterModule } from '@angular/router';
+
+const routes: Route[] = [
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [],
+  },
+];
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
-  imports: [BrowserModule, RoutingModule],
+  imports: [BrowserModule, RouterModule.forRoot(routes)],
   providers: [],
   bootstrap: [AppComponent],
 })
