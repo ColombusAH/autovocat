@@ -9,7 +9,13 @@ const routes: Route[] = [
   {
     path: '',
     component: LayoutComponent,
-    children: [],
+    children: [
+      {
+        path: 'auth',
+        loadChildren: () =>
+          import('./pages/auth/auth.module').then((m) => m.AuthModule),
+      },
+    ],
   },
 ];
 
