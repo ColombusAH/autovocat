@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { LayoutService } from './layout.service';
 
 @Component({
   selector: 'autovocat-layout',
@@ -9,7 +10,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 export class LayoutComponent implements OnInit {
   isMenuOpen = false;
 
-  constructor() {}
+  constructor(private layoutService: LayoutService) {}
 
   ngOnInit(): void {}
 }
