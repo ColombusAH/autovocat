@@ -8,27 +8,70 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { User } from '../../types/user.type';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   currentUser$!: Observable<any>;
-  currentUser: any;
+  currentUser: User | null = null;
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone
   ) {
+    // listen to auth changes
     this.afAuth.authState.subscribe((user) => {
       console.log(user);
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
-        this.currentUser = user;
+        this.currentUser = user as User;
+        console.log(this.currentUser);
       } else {
         localStorage.setItem('user', 'null');
         this.currentUser = null;
       }
     });
-  } // NgZone service to remove outside scope warning) { }
+  }
+  // Sign in with Google
+  async GoogleAuth() {
+    const res = await this.AuthLogin(new auth.GoogleAuthProvider());
+    if (res) {
+      this.router.navigate(['']);
+    }
+  }
+
+  private async AuthLogin(provider: auth.GoogleAuthProvider) {
+    console.log(provider);
+
+    try {
+      const result = await this.afAuth.signInWithPopup(provider);
+      this.ngZone.run(() => {
+        this.router.navigate(['']);
+      });
+      this.SetUserData(result.user);
+      return result.user;
+    } catch (error) {
+      window.alert(error);
+      return null;
+    }
+  }
+
+  private SetUserData(user: any) {
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(
+      `users/${user.uid}`
+    );
+    const userData: User = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      emailVerified: user.emailVerified,
+    };
+
+    return userRef.set(userData, {
+      merge: true,
+    });
+  }
 }
