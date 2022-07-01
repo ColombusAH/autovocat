@@ -19,8 +19,8 @@
             "inlineStyleLanguage": "scss",
             "assets": ["apps/docys/src/favicon.ico", "apps/docys/src/assets"],
             "styles": [
-              "apps/docys/src/styles.scss",
-              "node_modules/bulma/css/bulma.min.css"
+              "node_modules/bulma/css/bulma.min.css",
+              "apps/docys/src/styles.scss"
             ],
             "scripts": []
           },

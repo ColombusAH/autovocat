@@ -34,6 +34,11 @@ export class AuthService {
       }
     });
   }
+
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return user !== null && user.emailVerified !== false ? true : false;
+  }
   // Sign in with Google
   async GoogleAuth() {
     const res = await this.AuthLogin(new auth.GoogleAuthProvider());
@@ -42,9 +47,14 @@ export class AuthService {
     }
   }
 
+  async SignOut() {
+    await this.afAuth.signOut();
+    localStorage.removeItem('user');
+    this.router.navigate(['sign-in']);
+  }
+
   private async AuthLogin(provider: auth.GoogleAuthProvider) {
     console.log(provider);
-
     try {
       const result = await this.afAuth.signInWithPopup(provider);
       this.ngZone.run(() => {
@@ -69,6 +79,7 @@ export class AuthService {
       photoURL: user.photoURL,
       emailVerified: user.emailVerified,
     };
+    console.log({ userData });
 
     return userRef.set(userData, {
       merge: true,
