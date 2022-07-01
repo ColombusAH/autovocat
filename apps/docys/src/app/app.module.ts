@@ -6,7 +6,6 @@ import { LayoutComponent } from './layout/layout.component';
 import { Route, RouterModule } from '@angular/router';
 import { CoreModule } from './core/core.module';
 
-
 const routes: Route[] = [
   {
     path: '',
@@ -17,18 +16,18 @@ const routes: Route[] = [
         loadChildren: () =>
           import('./pages/auth/auth.module').then((m) => m.AuthModule),
       },
+      {
+        path: 'flows',
+        loadChildren: () =>
+          import('./pages/flows/flows.module').then((m) => m.FlowsModule),
+      },
     ],
   },
 ];
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(routes),
-    CoreModule,
-
-  ],
+  imports: [BrowserModule, RouterModule.forRoot(routes), CoreModule],
   providers: [],
   bootstrap: [AppComponent],
 })
