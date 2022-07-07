@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { tap } from 'rxjs/operators';
 import { LayoutService } from './layout.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { LayoutService } from './layout.service';
 })
 export class LayoutComponent implements OnInit {
   isMenuOpen = false;
+  isLoggedIn$ = this.layoutService.isLoggedIn$;
 
   constructor(private layoutService: LayoutService) {}
 

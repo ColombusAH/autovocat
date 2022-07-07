@@ -95,7 +95,7 @@
               <span> Tweet </span>
             </a>
           </p>
-          <p class="control">
+          <p class="control" *ngIf="!(isLoggedIn$ | async)">
             <a
               class="button is-primary"
               [routerLink]="['/auth']"

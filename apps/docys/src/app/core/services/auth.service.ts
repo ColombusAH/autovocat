@@ -6,15 +6,16 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { User } from '../../types/user.type';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  currentUser$!: Observable<any>;
+  currentUser$!: Observable<User | null>;
   currentUser: User | null = null;
+  isLoggedIn$: Observable<boolean>;
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -23,16 +24,22 @@ export class AuthService {
   ) {
     // listen to auth changes
     this.afAuth.authState.subscribe((user) => {
-      console.log(user);
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
         this.currentUser = user as User;
-        console.log(this.currentUser);
       } else {
         localStorage.setItem('user', 'null');
         this.currentUser = null;
       }
     });
+
+    this.isLoggedIn$ = this.afAuth.authState.pipe(
+      switchMap((user) => {
+        const res =
+          user !== null && user.emailVerified !== false ? true : false;
+        return of(res);
+      })
+    );
   }
 
   get isLoggedIn(): boolean {
@@ -54,7 +61,6 @@ export class AuthService {
   }
 
   private async AuthLogin(provider: auth.GoogleAuthProvider) {
-    console.log(provider);
     try {
       const result = await this.afAuth.signInWithPopup(provider);
       this.ngZone.run(() => {
@@ -79,7 +85,6 @@ export class AuthService {
       photoURL: user.photoURL,
       emailVerified: user.emailVerified,
     };
-    console.log({ userData });
 
     return userRef.set(userData, {
       merge: true,
